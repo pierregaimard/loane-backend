@@ -1,0 +1,22 @@
+{
+  "type": "mysql",
+  "host": "localhost",
+  "port": 8889,
+  "username": "root",
+  "password": "root",
+  "database": "loane3",
+  "synchronize": false,
+  "logging": false,
+  "entities": [
+    "src/entity/**/*.ts"
+  ],
+  "migrations": [
+    "migration/**/*.ts"
+  ],
+  "subscribers": [
+    "src/subscriber/**/*.ts"
+  ],
+  "cli": {
+    "migrationsDir": "migration"
+  }
+}
