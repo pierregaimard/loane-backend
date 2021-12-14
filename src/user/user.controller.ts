@@ -1,10 +1,11 @@
 import {
   BadRequestException,
+  NotFoundException,
+  ParseIntPipe,
   Body,
   Controller,
-  Get,
-  NotFoundException,
   Param,
+  Get,
   Post,
 } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -30,7 +31,7 @@ export class UserController {
   }
 
   @Get(':id')
-  async get(@Param('id') id: string) {
+  async get(@Param('id', ParseIntPipe) id: number) {
     const user = await this.userService.findOne(id);
 
     if (!user) {
