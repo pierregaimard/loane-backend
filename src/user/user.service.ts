@@ -19,7 +19,7 @@ export class UserService {
     return this.userRepository.find(options);
   }
 
-  findOne(id: string): Promise<User> {
+  findOne(id: number): Promise<User> {
     return this.userRepository.findOne(id);
   }
 
