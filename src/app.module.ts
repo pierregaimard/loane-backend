@@ -19,7 +19,7 @@ import { getConnectionOptions } from 'typeorm';
           /*
             Override ormconfig entities & migration keys to avoid statics glob
             paths webpack errors.
-            (This keys are only used by typeorm CLI migration commands.)
+            (only used by typeorm CLI migration commands.)
            */
           entities: [],
           migrations: [],
