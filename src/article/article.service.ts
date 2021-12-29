@@ -11,26 +11,23 @@ export class ArticleService {
   ) {}
 
   find(): Promise<Article[]> {
-    return this.articleRepository.find({ relations: ['ArticleCategory'] });
+    return this.articleRepository.find({ relations: ['category'] });
   }
 
   findBy(options: object): Promise<Article[]> {
     return this.articleRepository.find({
-      relations: ['ArticleCategory'],
+      relations: ['category'],
       ...options,
     });
   }
 
-  findOne(code: string): Promise<Article> {
-    return this.articleRepository.findOne(
-      { code: code },
-      { relations: ['ArticleCategory'] },
-    );
+  findOne(id: number): Promise<Article> {
+    return this.articleRepository.findOne(id, { relations: ['category'] });
   }
 
   findOneBy(options: object): Promise<Article> {
     return this.articleRepository.findOne(options, {
-      relations: ['ArticleCategory'],
+      relations: ['category'],
     });
   }
 
