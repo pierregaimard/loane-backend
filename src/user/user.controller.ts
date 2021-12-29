@@ -1,16 +1,17 @@
 import {
   BadRequestException,
   NotFoundException,
-  ParseIntPipe,
   Body,
   Controller,
   Param,
   Get,
   Post,
+  Put
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserCreateDto } from './dto/user.create.dto';
 import { PasswordHelper } from '../security/password.helper';
+import { User } from './entity/user.entity';
+import { UserUpdateDto } from './dto/user.update.dto';
 
 @Controller('users')
 export class UserController {
@@ -20,18 +21,44 @@ export class UserController {
   ) {}
 
   @Post()
-  async create(@Body() user: UserCreateDto) {
+  async create(@Body() user: User) {
     user.password = await this.passwordHelper.getHash(user.password);
 
     try {
-      return await this.userService.create(user);
+      const { password, ...resource } = await this.userService.save(user);
+      return resource;
+    } catch (err) {
+      throw new BadRequestException(err.sqlMessage);
+    }
+  }
+
+  @Put(':id')
+  async update(@Param('id') id: number, @Body() userUpdateDto: UserUpdateDto) {
+    const user = await this.userService.findOne(id);
+
+    if (!user) {
+      throw new BadRequestException(`L'utilisateur n°${id} n'existe pas`);
+    }
+
+    userUpdateDto.id = id;
+
+    if (userUpdateDto.password) {
+      userUpdateDto.password = await this.passwordHelper.getHash(
+        userUpdateDto.password,
+      );
+    }
+
+    try {
+      await this.userService.save(userUpdateDto);
+      const { password, ...data } = await this.userService.findOne(id);
+      return data;
     } catch (err) {
       throw new BadRequestException(err.sqlMessage);
     }
   }
 
   @Get(':id')
-  async get(@Param('id', ParseIntPipe) id: number) {
+  async get(@Param('id') id: number) {
     const user = await this.userService.findOne(id);
 
     if (!user) {
